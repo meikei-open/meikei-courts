@@ -51,12 +51,13 @@
       
       <div id="admin-buttons" class="hidden flex gap-2 ml-1 p-1 bg-yellow-100 border border-yellow-300 rounded">
         <button onclick="debugReset()" class="px-2 py-1 text-[10px] bg-red-100 text-red-700 border border-red-300 rounded">初期化</button>
+        <button onclick="toggleViewMode()" id="view-mode-btn" class="px-2 py-1 text-[10px] bg-purple-100 text-purple-800 border border-purple-400 font-bold rounded">観客画面プレビュー</button>
         <button onclick="toggleRole()" id="role-btn" class="px-3 py-1 text-[11px] bg-yellow-400 text-black border border-yellow-600 font-bold rounded">TD管理者</button>
       </div>
     </div>
   </header>
 
-  <!-- ★ 改善案3：常時表示される「明日の特典予告バナー」（タップするとスタンプラリーへ移動） -->
+  <!-- ★ 観客モード専用：明日の特典予告バナー（選手モードでは非表示） -->
   <div id="perk-promo-banner" onclick="switchTab('info')" class="hidden w-full max-w-6xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white px-3 py-2 text-xs font-bold shadow cursor-pointer flex items-center justify-between hover:opacity-95 transition">
     <div class="flex items-center space-x-2">
       <span class="bg-white text-orange-600 px-1.5 py-0.5 rounded text-[10px] font-black shrink-0 animate-pulse">特典予告</span>
@@ -65,7 +66,7 @@
     <i class="fa-solid fa-chevron-right text-xs ml-2 shrink-0"></i>
   </div>
 
-  <!-- ================= タブ1：練習コート予約システム ================= -->
+  <!-- ================= タブ1：練習コート予約システム（選手専用） ================= -->
   <main id="page-practice" class="tab-page hidden w-full max-w-6xl bg-white shadow-md border-x border-b border-gray-300 p-2 sm:p-4 overflow-hidden flex flex-col relative">
 
     <div class="flex flex-col sm:flex-row justify-between items-end mb-2 text-xs mt-1">
@@ -118,7 +119,7 @@
 
       <div class="flex flex-wrap gap-2">
         <button onclick="openBulkModal()" class="px-3 py-2 text-xs bg-red-600 text-white border border-red-800 font-bold shadow-md rounded"><i class="fa-solid fa-ban"></i> <span id="btn-bulk">一括ブロック</span></button>
-        <button onclick="openPosterModal()" class="px-3 py-1.5 text-xs bg-gray-800 text-white border border-gray-900 font-bold rounded"><i class="fa-solid fa-qrcode mr-1"></i>QRポスター作成(計測対応)</button>
+        <button onclick="openPosterModal()" class="px-3 py-1.5 text-xs bg-gray-800 text-white border border-gray-900 font-bold rounded"><i class="fa-solid fa-qrcode mr-1"></i>QRポスター作成(選手/観客別)</button>
         <button onclick="exportCSV()" class="px-3 py-1.5 text-xs bg-gray-100 text-gray-800 border border-gray-400 font-bold rounded">CSV</button>
       </div>
       
@@ -140,20 +141,20 @@
     </div>
   </main>
 
-  <!-- ================= タブ2：OP / ドロー & 試合進行状況（注目タグ付き） ================= -->
+  <!-- ================= タブ2：OP / ドロー & 試合進行状況 ================= -->
   <div id="page-oop" class="tab-page hidden w-full max-w-4xl mt-4 px-4">
     <h2 class="text-xl font-black border-b-2 border-gray-800 pb-2 mb-4" id="title-oop">📋 試合進行 & OP / Schedule</h2>
 
-    <!-- ★ 改善案2：各コートの試合進行状況 + 注目タグ・戦術の見どころ -->
+    <!-- 各コートの試合進行状況 (選手モードはシンプル表示、観客モードは見どころタグ付き) -->
     <div class="bg-white p-3.5 rounded shadow border border-gray-300 mb-4">
       <div class="flex justify-between items-center border-b border-gray-200 pb-1.5 mb-2.5">
         <h3 class="font-bold text-sm text-gray-800 flex items-center">
           <span class="inline-block w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 animate-ping"></span>
-          <span id="status-section-title">現在のコート状況・見どころ / Court Status</span>
+          <span id="status-section-title">現在のコート状況 / Court Status</span>
         </h3>
         <span class="text-[10px] text-gray-400 font-bold">Auto Sync</span>
       </div>
-      <div id="court-status-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
+      <div id="court-status-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-xs">
         <p class="text-gray-400 text-xs col-span-2 py-2">Loading...</p>
       </div>
     </div>
@@ -178,12 +179,12 @@
     </div>
   </div>
 
-  <!-- ================= タブ4：観客向けインフォメーション（デジタルスタンプ＆キッチンカー追加） ================= -->
+  <!-- ================= タブ4：インフォメーション（選手は施設案内のみシンプル表示） ================= -->
   <div id="page-info" class="tab-page hidden w-full max-w-4xl mt-4 px-4">
-    <h2 class="text-xl font-black border-b-2 border-gray-800 pb-2 mb-4" id="title-info">🗺️ 会場・大会情報 / Information</h2>
+    <h2 class="text-xl font-black border-b-2 border-gray-800 pb-2 mb-4" id="title-info">🗺️ 会場・施設案内 / Information</h2>
 
-    <!-- ★ 改善案1：デジタルスタンプラリー（紙代0円・配布手間0・一瞬で消込引き換え） -->
-    <div id="stamp-card-section" class="bg-gradient-to-br from-blue-900 to-indigo-900 text-white p-4 rounded-lg shadow-lg border-2 border-yellow-400 mb-4">
+    <!-- ★ 観客モード専用：デジタルスタンプラリー（選手モードでは非表示） -->
+    <div id="stamp-card-section" class="hidden bg-gradient-to-br from-blue-900 to-indigo-900 text-white p-4 rounded-lg shadow-lg border-2 border-yellow-400 mb-4">
       <div class="flex justify-between items-center border-b border-blue-700 pb-2 mb-3">
         <div>
           <span class="bg-yellow-400 text-black text-[10px] font-black px-2 py-0.5 rounded">来場特典企画</span>
@@ -198,7 +199,6 @@
         会場の退場ゲートにある「本日のスタンプQR」を読み込むとスタンプが貯まります。2日分集めると限定グッズ・特典と引き換えられます！
       </p>
 
-      <!-- スタンプ枠（2日分） -->
       <div class="grid grid-cols-2 gap-3 my-3">
         <div id="stamp-slot-1" class="bg-white/10 border-2 border-dashed border-blue-300 rounded-lg p-3 text-center flex flex-col items-center justify-center min-h-[90px]">
           <span class="text-xs font-bold text-blue-200">DAY 1</span>
@@ -210,7 +210,6 @@
         </div>
       </div>
 
-      <!-- 2個貯まったら出現する「景品引き換えチケット（消込ボタン付き）」 -->
       <div id="stamp-reward-area" class="hidden mt-3 bg-yellow-400 text-gray-900 p-3 rounded-lg text-center shadow-inner">
         <p class="font-black text-sm text-red-700 mb-1"><i class="fa-solid fa-gift mr-1"></i>スタンプ2個達成！特典引き換えチケット</p>
         <p class="text-[11px] font-bold text-gray-800 mb-2">この画面を退場ゲート（または本部）のスタッフにご提示ください。</p>
@@ -230,13 +229,13 @@
         <img id="venue-map-img" src="" alt="Venue Map" class="w-full rounded border border-gray-300 shadow-sm">
       </div>
 
-      <!-- ★ 改善案3：本日のキッチンカー情報（オレンジ強調枠） -->
-      <div id="kitchen-car-box" class="bg-orange-50 border-l-4 border-orange-500 p-3 rounded mb-3 text-xs">
+      <!-- ★ 観客モード専用：キッチンカー情報（選手モードでは非表示） -->
+      <div id="kitchen-car-box" class="hidden bg-orange-50 border-l-4 border-orange-500 p-3 rounded mb-3 text-xs">
         <div class="font-black text-orange-800 flex items-center mb-1">
           <i class="fa-solid fa-truck-fast mr-1.5 text-sm"></i>
           <span id="fac-kc-title">本日のキッチンカー・飲食出店 / Food Trucks</span>
         </div>
-        <p id="fac-kc-desc" class="text-gray-800 font-bold whitespace-pre-line">🍔 本日の出店：つくばバーガー＆特製クレープ（11:00〜15:00 ＠本部横広場）</p>
+        <p id="fac-kc-desc" class="text-gray-800 font-bold whitespace-pre-line"></p>
       </div>
       
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700 bg-gray-50 p-3 rounded border border-gray-200">
@@ -248,7 +247,7 @@
           <i class="fa-solid fa-restroom text-green-600 mt-0.5 w-4 text-center"></i>
           <div><span class="font-bold" id="fac-wc-title">お手洗い・更衣室 (Restroom):</span><br><span id="fac-wc-desc">クラブハウス（部室棟）内</span></div>
         </div>
-        <div class="flex items-start space-x-2">
+        <div id="fac-str-box" class="flex items-start space-x-2">
           <i class="fa-solid fa-table-tennis-paddle-ball text-purple-600 mt-0.5 w-4 text-center"></i>
           <div><span class="font-bold" id="fac-str-title">ストリンガー (Stringer):</span><br><span id="fac-str-desc">大会本部横 特設ブース</span></div>
         </div>
@@ -259,26 +258,27 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3 mb-4">
-      <a id="link-gourmet" href="#" target="_blank" class="bg-white p-4 rounded shadow border border-gray-200 text-center hover:bg-gray-50">
+    <!-- リンクカード群（グルメマップは観客モードのみ表示、選手モードは3列でスッキリ表示） -->
+    <div id="info-cards-grid" class="grid grid-cols-2 gap-3 mb-4">
+      <a id="link-gourmet" href="#" target="_blank" class="hidden bg-white p-4 rounded shadow border border-gray-200 text-center hover:bg-gray-50">
         <i class="fa-solid fa-utensils text-2xl text-orange-500 mb-2"></i>
         <h4 class="font-bold text-sm" id="card-gourmet-title">つくばグルメマップ</h4>
         <p class="text-[10px] text-gray-500 mt-1" id="card-gourmet-desc">おすすめの飲食店をご紹介</p>
-      </a>
-      <a id="link-insta" href="#" target="_blank" class="bg-white p-4 rounded shadow border border-gray-200 text-center hover:bg-gray-50">
-        <i class="fa-brands fa-instagram text-2xl text-pink-500 mb-2"></i>
-        <h4 class="font-bold text-sm" id="card-insta-title">公式 Instagram</h4>
-        <p class="text-[10px] text-gray-500 mt-1" id="card-insta-desc">試合結果や写真を速報</p>
       </a>
       <a id="link-access" href="#" target="_blank" class="bg-white p-4 rounded shadow border border-gray-200 text-center hover:bg-gray-50">
         <i class="fa-solid fa-map-location-dot text-2xl text-blue-500 mb-2"></i>
         <h4 class="font-bold text-sm" id="card-access-title">会場アクセス</h4>
         <p class="text-[10px] text-gray-500 mt-1" id="card-access-desc">駐車場・バスのご案内</p>
       </a>
+      <a id="link-insta" href="#" target="_blank" class="bg-white p-4 rounded shadow border border-gray-200 text-center hover:bg-gray-50">
+        <i class="fa-brands fa-instagram text-2xl text-pink-500 mb-2"></i>
+        <h4 class="font-bold text-sm" id="card-insta-title">公式 Instagram</h4>
+        <p class="text-[10px] text-gray-500 mt-1" id="card-insta-desc">試合結果や写真を速報</p>
+      </a>
       <a id="link-hp" href="#" target="_blank" class="bg-white p-4 rounded shadow border border-gray-200 text-center hover:bg-gray-50">
         <i class="fa-solid fa-globe text-2xl text-gray-700 mb-2"></i>
         <h4 class="font-bold text-sm" id="card-hp-title">大会公式HP</h4>
-        <p class="text-[10px] text-gray-500 mt-1" id="card-hp-desc">大会概要・スポンサー</p>
+        <p class="text-[10px] text-gray-500 mt-1" id="card-hp-desc">大会概要・要項</p>
       </a>
     </div>
     <div class="bg-gray-800 text-white p-4 rounded text-center text-xs">
@@ -364,27 +364,17 @@
     </div>
   </div>
 
-  <!-- ★ 改善案1 & 4：QRポスター作成モーダル（集客ルート計測パラメータ＆スタンプ獲得用QR対応） -->
+  <!-- QRポスター作成モーダル -->
   <div id="poster-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white max-w-lg w-full border-2 border-gray-800 p-4 shadow-xl max-h-[95vh] overflow-y-auto">
-      <h4 class="font-bold text-gray-800 mb-2 border-b-2 border-gray-800 pb-1">QRポスター作成（集客ルート自動計測対応）</h4>
+      <h4 class="font-bold text-gray-800 mb-2 border-b-2 border-gray-800 pb-1">QRポスター作成（選手用・観客用 出し分け対応）</h4>
       <div class="text-xs space-y-3 mb-4">
         <div><label class="font-bold mb-1 block text-gray-400">生成されるURL (パラメータ自動付与)</label><input type="text" id="poster-generated-url" class="w-full border border-gray-300 px-2 py-1.5 bg-gray-100 text-[10px]" readonly></div>
         <div>
           <label class="font-bold mb-1 block">ポスターの種類・配布ルートを選択</label>
           <div class="flex gap-2">
             <select id="poster-type-select" onchange="generatePoster()" class="flex-grow border border-gray-400 py-1.5 px-2 bg-gray-50 outline-none font-bold">
-              <optgroup label="■ 観客集客用（アクセス数を自動計測）">
-                <option value="guest_school">【部活招待チラシ用】(?mode=guest&from=school)</option>
-                <option value="guest_sat_venue">【土曜会場掲示用】(?mode=guest&from=sat_venue)</option>
-                <option value="guest_sun_venue">【日曜会場掲示用】(?mode=guest&from=sun_venue)</option>
-                <option value="guest_poster">【学内・街頭ポスター用】(?mode=guest&from=poster)</option>
-                <option value="guest_info">【観客用・一般】(?mode=guest)</option>
-              </optgroup>
-              <optgroup label="■ 退場ゲート専用（デジタルスタンプ付与）">
-                <option value="stamp_get">🎁【スタンプ獲得用QR】(?mode=guest&stamp=get)</option>
-              </optgroup>
-              <optgroup label="■ 選手向け (練習コート予約機能あり)">
+              <optgroup label="■ 選手向け（シンプル業務画面：コート予約・OP・連絡）">
                 <option value="player_all">【選手用】総合案内 (全コート)</option>
                 <option value="player_c1">【選手用】Court 1 専用</option>
                 <option value="player_c2">【選手用】Court 2 専用</option>
@@ -393,6 +383,16 @@
                 <option value="player_c5">【選手用】Court 5 専用</option>
                 <option value="player_c6">【選手用】Court 6 専用</option>
                 <option value="player_c7">【選手用】Court 7 専用</option>
+              </optgroup>
+              <optgroup label="■ 観客向け（特典・スタンプ・見どころタグ表示＆集客計測）">
+                <option value="guest_school">【部活招待チラシ用】(?mode=guest&from=school)</option>
+                <option value="guest_sat_venue">【土曜会場掲示用】(?mode=guest&from=sat_venue)</option>
+                <option value="guest_sun_venue">【日曜会場掲示用】(?mode=guest&from=sun_venue)</option>
+                <option value="guest_poster">【学内・街頭ポスター用】(?mode=guest&from=poster)</option>
+                <option value="guest_info">【観客用・一般】(?mode=guest)</option>
+              </optgroup>
+              <optgroup label="■ 退場ゲート専用（デジタルスタンプ付与）">
+                <option value="stamp_get">🎁【スタンプ獲得用QR】(?mode=guest&stamp=get)</option>
               </optgroup>
             </select>
           </div>
@@ -417,7 +417,7 @@
 
     let isGuestMode = false;
     let activeTabId = 'practice';
-    let pendingTrackRoute = ''; // 初回アクセス時にGASへ送信する計測パラメータ
+    let pendingTrackRoute = '';
 
     function switchTab(tabId) {
       activeTabId = tabId;
@@ -442,12 +442,51 @@
       window.scrollTo(0, 0);
     }
 
+    // ★ 選手モードと観客モードの表示要素を完全に切り分ける関数
+    function applyModeVisibility() {
+      const navPrac = document.getElementById('nav-practice');
+      const stampSec = document.getElementById('stamp-card-section');
+      const gourmetCard = document.getElementById('link-gourmet');
+      const strBox = document.getElementById('fac-str-box');
+      const viewModeBtn = document.getElementById('view-mode-btn');
+
+      if (isGuestMode) {
+        // 🎪 観客モード：練習予約とストリンガーを隠し、スタンプラリーやグルメを表示
+        if (navPrac && currentRole !== 'td') navPrac.style.display = 'none';
+        if (stampSec) stampSec.classList.remove('hidden');
+        if (gourmetCard) gourmetCard.classList.remove('hidden');
+        if (strBox) strBox.classList.add('hidden');
+        if (viewModeBtn) viewModeBtn.innerText = '選手画面に戻す';
+      } else {
+        // 🎾 選手モード：スタンプラリーや特典バナー、キッチンカー、グルメをすべて隠してストイックに
+        if (navPrac) navPrac.style.display = 'flex';
+        if (stampSec) stampSec.classList.add('hidden');
+        if (gourmetCard) gourmetCard.classList.add('hidden');
+        if (strBox) strBox.classList.remove('hidden');
+        if (viewModeBtn) viewModeBtn.innerText = '観客画面プレビュー';
+      }
+      updateLinks();
+      applyLang();
+    }
+
+    // TD管理者がワンタップで「選手画面」と「観客画面」の見え方をテスト切り替えできる機能
+    function toggleViewMode() {
+      isGuestMode = !isGuestMode;
+      applyModeVisibility();
+      if (isGuestMode && activeTabId === 'practice') {
+        switchTab('oop');
+      } else if (!isGuestMode) {
+        switchTab('practice');
+      }
+    }
+
     const i18n = {
       ja: {
         lang_label: "日本語",
         title: "筑波大学MEIKEIオープンテニス PRACTICE SHEET",
-        title_guest: "筑波大学MEIKEIオープンテニス 公式ポータル",
-        nav_practice: "コート予約", nav_oop: "試合進行/OP", nav_notice: "お知らせ", nav_info: "会場・特典",
+        title_guest: "筑波大学MEIKEIオープンテニス 公式観戦ガイド",
+        nav_practice: "コート予約", nav_oop: "試合進行/OP", nav_notice: "お知らせ",
+        nav_info_player: "施設案内", nav_info_guest: "会場・特典",
         rule: "【1日 {slots} ・最大4名】空きマスをタップして予約\n(※枠の上限は状況により変動します)", update: "更新",
         date: "Date:", open: "■ 空き", my: "■ 自分の予約", booked: "■ 予約済",
         swipe: "※表を横にスワイプして1〜7番コートを確認できます 👉",
@@ -480,23 +519,22 @@
         prompt_init: "【警告】スマホ内の設定（スタンプ・予約履歴）を初期化します。\n実行するにはTDパスワードを入力してください:",
         prompt_td_cancel_pass: "【危険】この予約を強制削除します。\n実行するにはTDパスワードを入力してください:",
         
-        // OP / Draw タブ
         title_oop: "📋 試合進行 & OP / Schedule",
-        status_section_title: "現在のコート状況・見どころ / Court Status",
+        status_title_player: "現在のコート状況 / Court Status",
+        status_title_guest: "現在のコート状況・見どころ / Court Status",
         no_status: "現在ステータス情報はありません。",
         oop_desc: "本日のOP・ドロー表はこちらから確認できます。",
         btn_op_pdf: "本日のOP / Order of Play (PDF)",
         btn_draw_pdf: "最新のドロー表 / Draws (PDF)",
         oop_note: "※OPは毎日夕方頃に更新されます。",
         
-        // Notice タブ
         title_notice: "📢 大会掲示板 / Notice",
         no_notices: "現在お知らせはありません。",
         badge_important: "重要 / IMPORTANT",
         badge_info: "連絡 / INFO",
         
-        // Info タブ
-        title_info: "🗺️ 会場案内・来場スタンプ / Info",
+        title_info_player: "🗺️ 会場・施設案内 / Venue Info",
+        title_info_guest: "🗺️ 会場案内・来場スタンプ / Guest Info",
         map_section_title: "会場内マップ・施設案内 / Venue Map",
         fac_kc_title: "本日のキッチンカー・飲食出店 / Food Trucks",
         fac_td_title: "大会本部 (TD Desk):", fac_td_desc: "ハードコート中央通路付近",
@@ -506,14 +544,15 @@
         card_gourmet_title: "つくばグルメマップ", card_gourmet_desc: "おすすめの飲食店をご紹介",
         card_insta_title: "公式 Instagram", card_insta_desc: "試合結果や写真を速報",
         card_access_title: "会場アクセス", card_access_desc: "駐車場・バスのご案内",
-        card_hp_title: "大会公式HP", card_hp_desc: "大会概要・スポンサー",
+        card_hp_title: "大会公式HP", card_hp_desc: "大会概要・要項",
         footer_title: "筑波大学MEIKEIオープンテニス"
       },
       en: {
         lang_label: "English",
         title: "MEIKEI OPEN Practice Court",
-        title_guest: "MEIKEI OPEN Official Portal",
-        nav_practice: "Practice", nav_oop: "OP/Draw", nav_notice: "Notice", nav_info: "Info/Perks",
+        title_guest: "MEIKEI OPEN Visitor Guide",
+        nav_practice: "Practice", nav_oop: "OP/Draw", nav_notice: "Notice",
+        nav_info_player: "Venue", nav_info_guest: "Info/Perks",
         rule: "[{slots}/day, Max 4 players] Tap an empty row to book\n(*Slot limits may change based on court availability)", update: "Update",
         date: "Date:", open: "■ Open", my: "■ My Booking", booked: "■ Booked",
         swipe: "* Swipe right to see Courts 1-7 👉",
@@ -547,7 +586,8 @@
         prompt_td_cancel_pass: "[Warning] Force deleting this booking.\nEnter TD Password to execute:",
 
         title_oop: "📋 Match Status & OOP",
-        status_section_title: "Live Court Status & Highlights",
+        status_title_player: "Live Court Status",
+        status_title_guest: "Live Court Status & Highlights",
         no_status: "No court status available.",
         oop_desc: "Check today's Order of Play and Draws below.",
         btn_op_pdf: "Today's Order of Play (PDF)",
@@ -559,7 +599,8 @@
         badge_important: "IMPORTANT",
         badge_info: "INFO",
         
-        title_info: "🗺️ Venue Info & Stamp Card",
+        title_info_player: "🗺️ Venue & Facilities",
+        title_info_guest: "🗺️ Venue Info & Stamp Card",
         map_section_title: "Venue Map & Facilities",
         fac_kc_title: "Today's Food Trucks",
         fac_td_title: "Tournament Desk (TD):", fac_td_desc: "Near the central passage of hard courts",
@@ -569,14 +610,15 @@
         card_gourmet_title: "Tsukuba Gourmet Map", card_gourmet_desc: "Recommended local restaurants",
         card_insta_title: "Official Instagram", card_insta_desc: "Live results & photos",
         card_access_title: "Venue Access", card_access_desc: "Bus & parking information",
-        card_hp_title: "Official Website", card_hp_desc: "Tournament overview & sponsors",
+        card_hp_title: "Official Website", card_hp_desc: "Tournament overview",
         footer_title: "University of Tsukuba MEIKEI OPEN Tennis"
       },
       ko: {
         lang_label: "한국어",
         title: "MEIKEI OPEN 연습 코트 예약",
-        title_guest: "MEIKEI OPEN 공식 포털",
-        nav_practice: "코트예약", nav_oop: "진행/OP", nav_notice: "공지사항", nav_info: "대회안내",
+        title_guest: "MEIKEI OPEN 관람객 가이드",
+        nav_practice: "코트예약", nav_oop: "진행/OP", nav_notice: "공지사항",
+        nav_info_player: "시설안내", nav_info_guest: "대회안내",
         rule: "[하루 {slots}, 최대 4명] 빈 칸 탭하여 예약\n(※상황에 따라 예약 제한 변동 가능)", update: "새로고침",
         date: "Date:", open: "■ 빈자리", my: "■ 내 예약", booked: "■ 예약됨",
         swipe: "※ 표를 옆으로 스와이프하여 코트를 확인하세요 👉",
@@ -610,7 +652,8 @@
         prompt_td_cancel_pass: "[경고] 이 예약을 강제 삭제합니다.\n실행하려면 TD 비밀번호를 입력하세요:",
 
         title_oop: "📋 경기 진행 & OP / Schedule",
-        status_section_title: "현재 코트 상황 및 관전 포인트",
+        status_title_player: "현재 코트 상황 / Court Status",
+        status_title_guest: "현재 코트 상황 및 관전 포인트",
         no_status: "현재 코트 상태 정보가 없습니다.",
         oop_desc: "오늘의 OP 및 대진표(Draw)를 확인하실 수 있습니다.",
         btn_op_pdf: "오늘의 OP / Order of Play (PDF)",
@@ -622,7 +665,8 @@
         badge_important: "중요 / IMPORTANT",
         badge_info: "안내 / INFO",
         
-        title_info: "🗺️ 대회장 안내 및 스탬프",
+        title_info_player: "🗺️ 대회장 및 시설 안내",
+        title_info_guest: "🗺️ 대회장 안내 및 스탬프",
         map_section_title: "대회장 맵 및 시설 안내 / Venue Map",
         fac_kc_title: "오늘의 푸드트럭 안내",
         fac_td_title: "대회 본부 (TD Desk):", fac_td_desc: "하드코트 중앙 통로 부근",
@@ -632,7 +676,7 @@
         card_gourmet_title: "츠쿠바 맛집 맵", card_gourmet_desc: "추천 음식점 소개",
         card_insta_title: "공식 Instagram", card_insta_desc: "경기 결과 및 사진 속보",
         card_access_title: "오시는 길 (Access)", card_access_desc: "버스 및 주차장 안내",
-        card_hp_title: "대회 공식 홈페이지", card_hp_desc: "대회 개요 및 스폰서",
+        card_hp_title: "대회 공식 홈페이지", card_hp_desc: "대회 개요 및 요강",
         footer_title: "츠쿠바대학 MEIKEI 오픈 테니스"
       }
     };
@@ -669,8 +713,8 @@
         const password = prompt("TD管理者パスワードを入力してください\n(Enter TD Password):");
         if (password === "2026") {
           document.getElementById('admin-buttons').classList.remove('hidden');
-          document.getElementById('nav-practice').style.display = 'flex'; // 観客モード中でもPracticeタブを復活
-          alert('【TD管理者メニュー】のロックを解除しました。');
+          document.getElementById('nav-practice').style.display = 'flex';
+          alert('【TD管理者メニュー】のロックを解除しました。\n上部の「観客画面プレビュー」ボタンで選手用・観客用の表示切り替えテストも行えます。');
           document.getElementById('date-select').removeAttribute('max'); 
         } else if (password !== null) {
           alert('パスワードが違います。');
@@ -719,7 +763,6 @@
       }
     }
 
-    // ================= ★ 改善案1：デジタルスタンプラリー機能 =================
     function getSavedStamps() {
       try {
         return JSON.parse(localStorage.getItem('meikei_stamps_v1')) || [];
@@ -807,7 +850,6 @@
          isGuestMode = true;
       }
 
-      // ★ 改善案4：集客ルートパラメータ（from=...）の検出と初回カウント送信セット
       const fromParam = urlParams.get('from');
       if (fromParam && !sessionStorage.getItem('meikei_tracked_' + fromParam)) {
         pendingTrackRoute = fromParam;
@@ -840,25 +882,20 @@
       }
 
       renderStampCard();
+      applyModeVisibility();
 
-      // ★ 退場ゲートのスタンプ獲得QR（?mode=guest&stamp=get）から開いた場合の自動処理
       if (urlParams.get('stamp') === 'get') {
-        const navPrac = document.getElementById('nav-practice');
-        if (navPrac) navPrac.style.display = 'none';
         switchTab('info');
         setTimeout(() => {
           addVisitStamp(getTodayString(), false);
           window.history.replaceState({}, document.title, window.location.pathname + "?mode=guest");
         }, 400);
       } else if (isGuestMode) {
-        const navPrac = document.getElementById('nav-practice');
-        if (navPrac) navPrac.style.display = 'none';
         switchTab('oop');
       } else {
         switchTab('practice'); 
       }
 
-      applyLang();
       fetchLatestData(true);
       startEcoSync();
     });
@@ -947,7 +984,7 @@
       setElText('nav-label-practice', t.nav_practice);
       setElText('nav-label-oop', t.nav_oop);
       setElText('nav-label-notice', t.nav_notice);
-      setElText('nav-label-info', t.nav_info);
+      setElText('nav-label-info', isGuestMode ? t.nav_info_guest : t.nav_info_player);
 
       setElText('rule-text', t.rule.replace('{slots}', currentSlotText));
       setElText('btn-update', t.update);
@@ -978,7 +1015,7 @@
       setElText('bulk-btn-cancel', t.btn_cancel);
 
       setElText('title-oop', t.title_oop);
-      setElText('status-section-title', t.status_section_title);
+      setElText('status-section-title', isGuestMode ? t.status_title_guest : t.status_title_player);
       setElText('oop-desc', t.oop_desc);
       setElText('btn-op-pdf', t.btn_op_pdf);
       setElText('btn-draw-pdf', t.btn_draw_pdf);
@@ -986,7 +1023,7 @@
 
       setElText('title-notice', t.title_notice);
 
-      setElText('title-info', t.title_info);
+      setElText('title-info', isGuestMode ? t.title_info_guest : t.title_info_player);
       setElText('map-section-title', t.map_section_title);
       setElText('fac-kc-title', t.fac_kc_title);
       setElText('fac-td-title', t.fac_td_title);
@@ -1071,7 +1108,7 @@
         let queryUrl = GAS_API_URL + "?date=" + selectedDate;
         if (pendingTrackRoute) {
           queryUrl += "&track=" + encodeURIComponent(pendingTrackRoute);
-          pendingTrackRoute = ''; // 1回送信したらクリア
+          pendingTrackRoute = '';
         }
         const res = await fetch(queryUrl);
         const data = await res.json();
@@ -1170,7 +1207,7 @@
       }
     }
 
-    // ★ 改善案2：各コートの試合進行状況 + 注目タグ（見どころ）を描画
+    // ★ コート状況の描画（選手モードは見どころタグを隠し、観客モードのみ表示）
     function renderMatchStatus() {
       const grid = document.getElementById('court-status-grid');
       if (!grid) return;
@@ -1202,7 +1239,8 @@
           dot = 'bg-blue-500';
         }
 
-        const tagHtml = tagStr
+        // 観客モードの時だけ「🔥注目タグ」を表示
+        const tagHtml = (isGuestMode && tagStr)
           ? `<div class="mt-1.5 inline-block bg-amber-100 border border-amber-400 text-amber-900 text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm leading-tight">${tagStr}</div>`
           : '';
 
@@ -1221,7 +1259,6 @@
       });
     }
 
-    // ★ 改善案3：リンク・会場マップ・特典予告バナー・キッチンカー情報の反映
     function updateLinks() {
       if(!sysLinks) return;
       const setHref = (id, url) => { const el = document.getElementById(id); if(el && url) el.href = url; };
@@ -1244,12 +1281,12 @@
         }
       }
 
-      // 明日の特典予告バナー
+      // ★ 特典予告バナーとキッチンカー情報は「観客モード（isGuestMode）」の時のみ表示
       const perkBanner = document.getElementById('perk-promo-banner');
       const perkTextEl = document.getElementById('perk-banner-text');
       const perkText = sysLinks['PERK_BANNER_TEXT'] ? String(sysLinks['PERK_BANNER_TEXT']).trim() : '';
       if (perkBanner && perkTextEl) {
-        if (perkText !== '') {
+        if (isGuestMode && perkText !== '') {
           perkTextEl.innerText = perkText;
           perkBanner.classList.remove('hidden');
         } else {
@@ -1257,12 +1294,11 @@
         }
       }
 
-      // キッチンカー情報
       const kcBox = document.getElementById('kitchen-car-box');
       const kcDesc = document.getElementById('fac-kc-desc');
       const kcText = sysLinks['KITCHEN_CAR_INFO'] ? String(sysLinks['KITCHEN_CAR_INFO']).trim() : '';
       if (kcBox && kcDesc) {
-        if (kcText !== '') {
+        if (isGuestMode && kcText !== '') {
           kcDesc.innerText = kcText;
           kcBox.classList.remove('hidden');
         } else {
@@ -1728,7 +1764,6 @@
     function openPosterModal() { document.getElementById('poster-modal').classList.remove('hidden'); generatePoster(); }
     function closePosterModal() { document.getElementById('poster-modal').classList.add('hidden'); }
     
-    // ★ 改善案1 & 4：集客ルート別パラメータ・スタンプ獲得用QRの生成
     function generatePoster() {
       const baseUrl = window.location.href.split('?')[0];
       const target = document.getElementById('poster-type-select').value;
@@ -1741,7 +1776,7 @@
       if (target === 'guest_school') {
          tUrl += '?mode=guest&from=school';
          document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = '大会公式ポータル・注目試合ガイド';
+         document.getElementById('poster-court-title').innerText = '大会公式観戦ガイド';
          subNote.innerText = '試合の進行状況・見どころ・来場スタンプはこちら！';
       } else if (target === 'guest_sat_venue') {
          tUrl += '?mode=guest&from=sat_venue';
@@ -1756,7 +1791,7 @@
       } else if (target === 'guest_poster') {
          tUrl += '?mode=guest&from=poster';
          document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = '大会公式ポータル';
+         document.getElementById('poster-court-title').innerText = '大会公式観戦ガイド';
       } else if (target === 'guest_info') {
          tUrl += '?mode=guest';
          document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
@@ -1768,7 +1803,7 @@
          subNote.innerText = 'スマホのカメラで読み取ると、本日のスタンプが貯まります！';
       } else if (target === 'player_all') {
          document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = 'PRACTICE SHEET';
+         document.getElementById('poster-court-title').innerText = 'PRACTICE SHEET (選手用)';
       } else {
          const cNum = target.replace('player_', '');
          tUrl += '?court=' + cNum;
