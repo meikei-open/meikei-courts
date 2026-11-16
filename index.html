@@ -11,7 +11,15 @@
     @media print {
       body * { visibility: hidden; }
       #poster-print-area, #poster-print-area * { visibility: visible; }
-      #poster-print-area { position: absolute; left: 0; top: 0; width: 100%; }
+      #poster-print-area {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: 4px solid #000 !important;
+        padding: 32px !important;
+        box-shadow: none !important;
+      }
     }
     table { border-collapse: collapse; width: 100%; border: 2px solid #1f2937; }
     th, td { border: 1px solid #9ca3af; max-width: 95px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
@@ -57,7 +65,7 @@
     </div>
   </header>
 
-  <!-- ★ 観客モード専用：明日の特典予告バナー（選手モードでは非表示） -->
+  <!-- 観客モード専用：明日の特典予告バナー（選手モードでは非表示） -->
   <div id="perk-promo-banner" onclick="switchTab('info')" class="hidden w-full max-w-6xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white px-3 py-2 text-xs font-bold shadow cursor-pointer flex items-center justify-between hover:opacity-95 transition">
     <div class="flex items-center space-x-2">
       <span class="bg-white text-orange-600 px-1.5 py-0.5 rounded text-[10px] font-black shrink-0 animate-pulse">特典予告</span>
@@ -119,7 +127,7 @@
 
       <div class="flex flex-wrap gap-2">
         <button onclick="openBulkModal()" class="px-3 py-2 text-xs bg-red-600 text-white border border-red-800 font-bold shadow-md rounded"><i class="fa-solid fa-ban"></i> <span id="btn-bulk">一括ブロック</span></button>
-        <button onclick="openPosterModal()" class="px-3 py-1.5 text-xs bg-gray-800 text-white border border-gray-900 font-bold rounded"><i class="fa-solid fa-qrcode mr-1"></i>QRポスター作成(選手/観客別)</button>
+        <button onclick="openPosterModal()" class="px-3 py-1.5 text-xs bg-gray-800 text-white border border-gray-900 font-bold rounded"><i class="fa-solid fa-qrcode mr-1"></i>QRポスター作成(3言語対応)</button>
         <button onclick="exportCSV()" class="px-3 py-1.5 text-xs bg-gray-100 text-gray-800 border border-gray-400 font-bold rounded">CSV</button>
       </div>
       
@@ -145,7 +153,6 @@
   <div id="page-oop" class="tab-page hidden w-full max-w-4xl mt-4 px-4">
     <h2 class="text-xl font-black border-b-2 border-gray-800 pb-2 mb-4" id="title-oop">📋 試合進行 & OP / Schedule</h2>
 
-    <!-- 各コートの試合進行状況 (選手モードはシンプル表示、観客モードは見どころタグ付き) -->
     <div class="bg-white p-3.5 rounded shadow border border-gray-300 mb-4">
       <div class="flex justify-between items-center border-b border-gray-200 pb-1.5 mb-2.5">
         <h3 class="font-bold text-sm text-gray-800 flex items-center">
@@ -179,11 +186,11 @@
     </div>
   </div>
 
-  <!-- ================= タブ4：インフォメーション（選手は施設案内のみシンプル表示） ================= -->
+  <!-- ================= タブ4：インフォメーション ================= -->
   <div id="page-info" class="tab-page hidden w-full max-w-4xl mt-4 px-4">
     <h2 class="text-xl font-black border-b-2 border-gray-800 pb-2 mb-4" id="title-info">🗺️ 会場・施設案内 / Information</h2>
 
-    <!-- ★ 観客モード専用：デジタルスタンプラリー（選手モードでは非表示） -->
+    <!-- 観客モード専用：デジタルスタンプラリー -->
     <div id="stamp-card-section" class="hidden bg-gradient-to-br from-blue-900 to-indigo-900 text-white p-4 rounded-lg shadow-lg border-2 border-yellow-400 mb-4">
       <div class="flex justify-between items-center border-b border-blue-700 pb-2 mb-3">
         <div>
@@ -229,7 +236,7 @@
         <img id="venue-map-img" src="" alt="Venue Map" class="w-full rounded border border-gray-300 shadow-sm">
       </div>
 
-      <!-- ★ 観客モード専用：キッチンカー情報（選手モードでは非表示） -->
+      <!-- 観客モード専用：キッチンカー情報 -->
       <div id="kitchen-car-box" class="hidden bg-orange-50 border-l-4 border-orange-500 p-3 rounded mb-3 text-xs">
         <div class="font-black text-orange-800 flex items-center mb-1">
           <i class="fa-solid fa-truck-fast mr-1.5 text-sm"></i>
@@ -258,7 +265,6 @@
       </div>
     </div>
 
-    <!-- リンクカード群（グルメマップは観客モードのみ表示、選手モードは3列でスッキリ表示） -->
     <div id="info-cards-grid" class="grid grid-cols-2 gap-3 mb-4">
       <a id="link-gourmet" href="#" target="_blank" class="hidden bg-white p-4 rounded shadow border border-gray-200 text-center hover:bg-gray-50">
         <i class="fa-solid fa-utensils text-2xl text-orange-500 mb-2"></i>
@@ -364,17 +370,17 @@
     </div>
   </div>
 
-  <!-- QRポスター作成モーダル -->
+  <!-- ★ 3言語併記（日・英・韓）対応のQRポスター作成モーダル -->
   <div id="poster-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white max-w-lg w-full border-2 border-gray-800 p-4 shadow-xl max-h-[95vh] overflow-y-auto">
-      <h4 class="font-bold text-gray-800 mb-2 border-b-2 border-gray-800 pb-1">QRポスター作成（選手用・観客用 出し分け対応）</h4>
+      <h4 class="font-bold text-gray-800 mb-2 border-b-2 border-gray-800 pb-1">QRポスター作成（日・英・韓 3言語併記）</h4>
       <div class="text-xs space-y-3 mb-4">
         <div><label class="font-bold mb-1 block text-gray-400">生成されるURL (パラメータ自動付与)</label><input type="text" id="poster-generated-url" class="w-full border border-gray-300 px-2 py-1.5 bg-gray-100 text-[10px]" readonly></div>
         <div>
           <label class="font-bold mb-1 block">ポスターの種類・配布ルートを選択</label>
           <div class="flex gap-2">
             <select id="poster-type-select" onchange="generatePoster()" class="flex-grow border border-gray-400 py-1.5 px-2 bg-gray-50 outline-none font-bold">
-              <optgroup label="■ 選手向け（シンプル業務画面：コート予約・OP・連絡）">
+              <optgroup label="■ 選手向け（コート予約・OP・公式連絡）">
                 <option value="player_all">【選手用】総合案内 (全コート)</option>
                 <option value="player_c1">【選手用】Court 1 専用</option>
                 <option value="player_c2">【選手用】Court 2 専用</option>
@@ -384,7 +390,7 @@
                 <option value="player_c6">【選手用】Court 6 専用</option>
                 <option value="player_c7">【選手用】Court 7 専用</option>
               </optgroup>
-              <optgroup label="■ 観客向け（特典・スタンプ・見どころタグ表示＆集客計測）">
+              <optgroup label="■ 観客向け（進行・見どころ・特典スタンプ＆集客計測）">
                 <option value="guest_school">【部活招待チラシ用】(?mode=guest&from=school)</option>
                 <option value="guest_sat_venue">【土曜会場掲示用】(?mode=guest&from=sat_venue)</option>
                 <option value="guest_sun_venue">【日曜会場掲示用】(?mode=guest&from=sun_venue)</option>
@@ -398,12 +404,31 @@
           </div>
         </div>
       </div>
-      <div id="poster-print-area" class="border-2 border-black p-4 text-center bg-white mt-2">
-        <h2 class="font-bold text-gray-900 tracking-wide text-sm" id="poster-main-title">筑波大学MEIKEIオープンテニス</h2>
-        <h3 id="poster-court-title" class="text-xl font-black mt-1 border-b-2 border-black inline-block pb-1 px-4">PRACTICE SHEET</h3>
-        <div id="qrcode-container" class="my-5 flex justify-center min-h-[160px]"></div>
-        <p id="poster-sub-note" class="text-xs font-bold text-gray-700 mt-1"></p>
+
+      <!-- 印刷対象エリア（A4印刷時にここだけが綺麗に拡大印刷されます） -->
+      <div id="poster-print-area" class="border-2 border-black p-5 text-center bg-white mt-2">
+        <p class="text-[11px] font-bold text-gray-600 tracking-widest">TSUKUBA MEIKEI OPEN TENNIS</p>
+        <h2 class="font-black text-gray-900 tracking-wide text-base" id="poster-main-title">筑波大学MEIKEIオープンテニス</h2>
+        
+        <div class="my-2 border-y-2 border-black py-2 px-3 bg-gray-50">
+          <h3 id="poster-court-title" class="text-xl font-black text-gray-900 leading-tight">PRACTICE COURT BOOKING</h3>
+          <p id="poster-court-subtitle" class="text-xs font-bold text-gray-700 mt-0.5">練習コート予約 / 연습 코트 예약</p>
+        </div>
+
+        <div id="qrcode-container" class="my-4 flex justify-center min-h-[170px]"></div>
+
+        <!-- 日・英・韓 3言語の説明ボックス -->
+        <div class="text-left bg-gray-50 border border-gray-300 rounded p-3 space-y-1.5 text-[11px] leading-snug">
+          <p id="poster-desc-ja" class="font-bold text-gray-900"></p>
+          <p id="poster-desc-en" class="font-semibold text-gray-700"></p>
+          <p id="poster-desc-ko" class="font-semibold text-gray-700"></p>
+        </div>
+
+        <div class="mt-3 inline-block bg-gray-900 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wide">
+          🌐 日本語 / English / 한국어 Available
+        </div>
       </div>
+
       <div class="mt-4 flex space-x-2">
         <button onclick="closePosterModal()" class="w-1/2 border border-gray-400 py-2 bg-gray-200 text-xs font-bold">閉じる</button>
         <button onclick="window.print()" class="w-1/2 border border-gray-800 py-2 bg-gray-800 text-white text-xs font-bold hover:bg-black">A4印刷</button>
@@ -442,7 +467,6 @@
       window.scrollTo(0, 0);
     }
 
-    // ★ 選手モードと観客モードの表示要素を完全に切り分ける関数
     function applyModeVisibility() {
       const navPrac = document.getElementById('nav-practice');
       const stampSec = document.getElementById('stamp-card-section');
@@ -451,14 +475,12 @@
       const viewModeBtn = document.getElementById('view-mode-btn');
 
       if (isGuestMode) {
-        // 🎪 観客モード：練習予約とストリンガーを隠し、スタンプラリーやグルメを表示
         if (navPrac && currentRole !== 'td') navPrac.style.display = 'none';
         if (stampSec) stampSec.classList.remove('hidden');
         if (gourmetCard) gourmetCard.classList.remove('hidden');
         if (strBox) strBox.classList.add('hidden');
         if (viewModeBtn) viewModeBtn.innerText = '選手画面に戻す';
       } else {
-        // 🎾 選手モード：スタンプラリーや特典バナー、キッチンカー、グルメをすべて隠してストイックに
         if (navPrac) navPrac.style.display = 'flex';
         if (stampSec) stampSec.classList.add('hidden');
         if (gourmetCard) gourmetCard.classList.add('hidden');
@@ -469,7 +491,6 @@
       applyLang();
     }
 
-    // TD管理者がワンタップで「選手画面」と「観客画面」の見え方をテスト切り替えできる機能
     function toggleViewMode() {
       isGuestMode = !isGuestMode;
       applyModeVisibility();
@@ -1207,7 +1228,6 @@
       }
     }
 
-    // ★ コート状況の描画（選手モードは見どころタグを隠し、観客モードのみ表示）
     function renderMatchStatus() {
       const grid = document.getElementById('court-status-grid');
       if (!grid) return;
@@ -1239,7 +1259,6 @@
           dot = 'bg-blue-500';
         }
 
-        // 観客モードの時だけ「🔥注目タグ」を表示
         const tagHtml = (isGuestMode && tagStr)
           ? `<div class="mt-1.5 inline-block bg-amber-100 border border-amber-400 text-amber-900 text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm leading-tight">${tagStr}</div>`
           : '';
@@ -1281,7 +1300,6 @@
         }
       }
 
-      // ★ 特典予告バナーとキッチンカー情報は「観客モード（isGuestMode）」の時のみ表示
       const perkBanner = document.getElementById('perk-promo-banner');
       const perkTextEl = document.getElementById('perk-banner-text');
       const perkText = sysLinks['PERK_BANNER_TEXT'] ? String(sysLinks['PERK_BANNER_TEXT']).trim() : '';
@@ -1764,57 +1782,60 @@
     function openPosterModal() { document.getElementById('poster-modal').classList.remove('hidden'); generatePoster(); }
     function closePosterModal() { document.getElementById('poster-modal').classList.add('hidden'); }
     
+    // ★ ポスター種別ごとに日・英・韓の3言語タイトル＆案内文を自動セット
     function generatePoster() {
       const baseUrl = window.location.href.split('?')[0];
       const target = document.getElementById('poster-type-select').value;
       const qc = document.getElementById('qrcode-container'); qc.innerHTML = '';
-      const subNote = document.getElementById('poster-sub-note');
+      
+      const titleEl = document.getElementById('poster-court-title');
+      const subTitleEl = document.getElementById('poster-court-subtitle');
+      const descJa = document.getElementById('poster-desc-ja');
+      const descEn = document.getElementById('poster-desc-en');
+      const descKo = document.getElementById('poster-desc-ko');
       
       let tUrl = baseUrl;
-      subNote.innerText = '';
       
-      if (target === 'guest_school') {
-         tUrl += '?mode=guest&from=school';
-         document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = '大会公式観戦ガイド';
-         subNote.innerText = '試合の進行状況・見どころ・来場スタンプはこちら！';
-      } else if (target === 'guest_sat_venue') {
-         tUrl += '?mode=guest&from=sat_venue';
-         document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = '大会インフォメーション';
-         subNote.innerText = '本日のコート進行・キッチンカー・来場特典はこちら！';
-      } else if (target === 'guest_sun_venue') {
-         tUrl += '?mode=guest&from=sun_venue';
-         document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = '大会インフォメーション';
-         subNote.innerText = '本日のコート進行・キッチンカー・来場特典はこちら！';
-      } else if (target === 'guest_poster') {
-         tUrl += '?mode=guest&from=poster';
-         document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = '大会公式観戦ガイド';
-      } else if (target === 'guest_info') {
-         tUrl += '?mode=guest';
-         document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = '大会インフォメーション';
+      if (target.startsWith('guest_')) {
+         if (target === 'guest_school') tUrl += '?mode=guest&from=school';
+         else if (target === 'guest_sat_venue') tUrl += '?mode=guest&from=sat_venue';
+         else if (target === 'guest_sun_venue') tUrl += '?mode=guest&from=sun_venue';
+         else if (target === 'guest_poster') tUrl += '?mode=guest&from=poster';
+         else tUrl += '?mode=guest';
+
+         titleEl.innerText = 'OFFICIAL VISITOR GUIDE';
+         subTitleEl.innerText = '大会公式インフォメーション / 대회 공식 관람 가이드';
+         descJa.innerText = '🇯🇵 試合進行・注目カード・ドロー・会場マップ・キッチンカー・来場スタンプはこちら！';
+         descEn.innerText = '🇬🇧 Scan for Live Court Status, Draws, Venue Map, Food Trucks & Visitor Perks!';
+         descKo.innerText = '🇰🇷 실시간 경기 진행, 대진표, 대회장 맵, 푸드트럭 및 방문객 스탬프 안내!';
       } else if (target === 'stamp_get') {
          tUrl += '?mode=guest&stamp=get&from=stamp_qr';
-         document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス 来場特典';
-         document.getElementById('poster-court-title').innerText = '🎫 本日の来場スタンプ獲得QR';
-         subNote.innerText = 'スマホのカメラで読み取ると、本日のスタンプが貯まります！';
+         titleEl.innerText = 'DIGITAL STAMP RALLY';
+         subTitleEl.innerText = '本日の来場スタンプ獲得QR / 방문 스탬프 획득 QR';
+         descJa.innerText = '🇯🇵 スマホのカメラで読み取ると本日のスタンプが貯まります！（2日分集めると特典進呈）';
+         descEn.innerText = '🇬🇧 Scan with your camera to get today\'s visit stamp! (Collect 2 stamps for a special gift)';
+         descKo.innerText = '🇰🇷 스마트폰 카메라로 스캔하면 오늘의 스탬프가 적립됩니다! (2일치 모으면 특전 증정)';
       } else if (target === 'player_all') {
-         document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = 'PRACTICE SHEET (選手用)';
+         titleEl.innerText = 'PRACTICE COURT & PLAYER PORTAL';
+         subTitleEl.innerText = '練習コート予約・選手連絡 / 연습 코트 예약 및 선수 공지';
+         descJa.innerText = '🇯🇵 QRコードを読み取り、練習コートの予約・OP・大会連絡をご確認ください。';
+         descEn.innerText = '🇬🇧 Scan to book practice courts and check the Order of Play & official notices.';
+         descKo.innerText = '🇰🇷 QR코드를 스캔하여 연습 코트 예약, OP 및 공식 공지사항을 확인하세요.';
       } else {
          const cNum = target.replace('player_', '');
+         const cLabel = courtLabels[cNum];
          tUrl += '?court=' + cNum;
-         document.getElementById('poster-main-title').innerText = '筑波大学MEIKEIオープンテニス';
-         document.getElementById('poster-court-title').innerText = courtLabels[cNum] + ' 専用';
+         titleEl.innerText = `${cLabel.toUpperCase()} - PRACTICE SHEET`;
+         subTitleEl.innerText = `${cLabel} 練習コート予約 / ${cLabel} 연습 코트 예약`;
+         descJa.innerText = `🇯🇵 【${cLabel}】練習コートの空き状況確認・予約・OP確認はこちらから。`;
+         descEn.innerText = `🇬🇧 [${cLabel}] Scan to book practice slots and check the Order of Play.`;
+         descKo.innerText = `🇰🇷 [${cLabel}] 연습 코트 예약 및 OP/공지사항 확인은 여기에서 스캔하세요.`;
       }
       
       const urlBox = document.getElementById('poster-generated-url');
       if (urlBox) urlBox.value = tUrl;
       
-      new QRCode(qc, { text: tUrl, width: 150, height: 150, colorDark: "#000", colorLight: "#fff" });
+      new QRCode(qc, { text: tUrl, width: 170, height: 170, colorDark: "#000", colorLight: "#fff" });
     }
   </script>
 </body>
